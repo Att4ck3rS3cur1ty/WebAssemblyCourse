@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+0 <!DOCTYPE html>
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
@@ -7,18 +7,43 @@
   <body>
     <h1>WebAssembly Demo</h1>
     <script>
+
+      // Read a string out of Web Assembly memory
+      const readMemStr = (offset, length) => {
+        const strBuffer = new Uint8Array(wasm.instance.exports.memory.buffer, offset, length)
+        const str = new TextDecoder().decode(strBuffer)
+
+        // Notify and make use of new string
+        window.dispatchEvent(new CustomEvent('wasmValue', {detail: str}))
+
+        // Listen for new wasm strings
+        window.addEventListener('wasmValue', str =>{
+          console.log('Receveid a new string from C: ', str.detail)
+
+          /* Above solution is pretty good because WASM doesn't use DOM*/
+        })
+      }
+
+      // Imports object
+      const imports = {
+        env: {
+          numLog: console.log,
+          strLog: readMemStr
+        }
+      }
       // Load WASM
       /* relatively new way of instantiate it, so it'll be common to see other ways to do it,
         but this is by far the best way, once it instantiates directly from the download file
        (will be faster than previous methods) */
-      WebAssembly.instantiateStreaming(fetch('./program.wasm'))
+      WebAssembly.instantiateStreaming(fetch('./program.wasm'), imports)
       .then(wasm => {
         console.log('WASM Ready.');
 
         window.wasm = wasm
         // Log out all exported functions
         // console.log(WebAssembly.Module.exports(wasm.module))
-        console.log(wasm.instance.exports.getDoubleNumber(80));
+        // wasm.instance.exports.getDoubleNumber(33)
+        // console.log(WebAssembly.Module.imports(wasm.module));
       })
     </script>
   </body>
