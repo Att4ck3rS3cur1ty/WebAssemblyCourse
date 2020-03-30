@@ -7,6 +7,9 @@
   <body>
     <h1>WebAssembly Demo</h1>
     <script src="demo.js" charset="utf-8"></script>
-    <script></script>
+    <script>
+      // Wrap C _greet as a JS function
+      const greet = cwrap('greet', 'string', ['string'])
+    </script>
   </body>
 </html>
