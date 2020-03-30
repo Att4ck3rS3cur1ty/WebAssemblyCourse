@@ -1,0 +1,6 @@
+
+- Generating my own wasm:
+	emcc .\lib\demo.c -s WASM=1  -o .\public\demo.js
+
+- Loading another *.js as soon as demo.js is loaded. To prepend this to the beginning, change the "--post-js" flag to "--pre-js" 
+	emcc .\lib\demo.c -s WASM=1 --post-js .\public\ready.js -o .\public\demo.js
