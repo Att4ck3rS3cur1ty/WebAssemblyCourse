@@ -8,7 +8,11 @@
     <h1>WebAssembly Demo</h1>
     <script src="strings.js" charset="utf-8"></script>
     <script>
-      
+      // Wait for WASM (Emscripten) runtime to be ready
+      Module['onRunTimeInitialized'] = () => {
+        console.log('Runtime Ready');
+        console.log(_getStr());
+      }
     </script>
   </body>
 </html>
